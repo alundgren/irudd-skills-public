@@ -45,8 +45,8 @@ in `muted`, left where it is, with nothing suggesting you can press it.
 ## Why
 
 Principle 5. On a view that is one kind of thing, context carries affordance
-and a plain row is fine. Kalori's result list is exactly that, every row is a
-food, and none of them need a border to say so.
+and a plain row is fine. A search result list is exactly that, every row is a
+result, and none of them need a border to say so.
 
 This view mixes kinds. The moment it does, each control has to look
 interactive on its own, and nothing that is not interactive may look like it

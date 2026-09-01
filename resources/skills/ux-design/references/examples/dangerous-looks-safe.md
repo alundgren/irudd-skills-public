@@ -1,6 +1,6 @@
 # A destructive action styled like a safe one
 
-An admin page for one deployed app. Piploy shaped.
+An admin page for one deployed app.
 
 ## Before
 

@@ -21,45 +21,18 @@ Load one pair, not the folder.
 
 Principle numbers are the numbered list in `SKILL.md`.
 
-## Two files that are not pairs
+## The file that is not a pair
 
 `gallery.html` renders every pair, before next to after, on one page. It is for
 a person who wants to look at them. Do not load it as context, load the pair's
 markdown file instead. The markdown carries the guidance, the gallery carries
 the pictures.
 
-`kalori-restyle.html` is the reference screen, not a before and after. See
-below.
-
 ## Keeping the gallery in sync
 
 Write the markdown file first, then add its section to `gallery.html`. If the
 two disagree, the markdown is authoritative because that is what agents read.
 Keep gallery sections small enough to compare directly with their source file.
-
-## kalori-restyle.html
-
-Open it in a browser. The live original at `kalori.irudd.net` is the before: a
-Bootstrap boilerplate list on white, with correct information design
-underneath. That combination is what makes it useful. The restyle proves the
-palette without changing a single structural decision.
-
-What changed:
-
-- The number carries weight, 600 and tabular. It is the one thing the task
-  needs, so it gets the weight. Frequency of use, applied.
-- A "kcal / 100 g" column label. The only structural change on the screen, and
-  the only thing an end user has to be told.
-- Alternating row tint instead of a grey stripe. One lightness step, no colour
-  change.
-- The search field is the lightest surface on the page, 96% against a 91%
-  ground. It is used on every visit, so it reads as the place to act.
-
-What deliberately did not change: row order, the bolded matched substring, one
-number per row, right aligned. It was already right.
-
-The file renders the whole role table as swatches for review. A real page shows
-only the roles it needs.
 
 ## Adding a pair
 
