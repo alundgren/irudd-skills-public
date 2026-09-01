@@ -1,0 +1,1 @@
+{"type":"assistant","sessionId":"agent-direct","timestamp":"2026-08-16T10:01:00Z","message":{"id":"child-message","role":"assistant","content":[{"type":"text","text":"Direct subagent feedback."}],"usage":{"input_tokens":30,"output_tokens":7}}}

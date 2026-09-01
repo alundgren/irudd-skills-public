@@ -1,0 +1,2 @@
+{"type":"assistant","sessionId":"partial","timestamp":"2026-08-16T10:00:00Z","message":{"id":"partial-message","role":"assistant","content":[{"type":"text","text":"Complete record."}],"usage":{"input_tokens":12,"output_tokens":3}}}
+{"type":"assistant"

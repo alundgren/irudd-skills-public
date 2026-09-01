@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review: Plan"
+  short_description: "Reject PRs without a small solution plan"
+  default_prompt: "Use $axis-review-plan on this pull request or current branch."

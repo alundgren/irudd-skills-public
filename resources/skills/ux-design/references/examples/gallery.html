@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UX before and after</title>
+
+<style>
+  /* Single look on purpose. No theme reaction, every colour painted. No
+     webfont, because a real app must not pull one from a third party CDN. */
+  :root {
+    --bg: #F2EADE;
+    --surface: #EADFCD;
+    --raised: #E0D2BD;
+    --line: #C1AF9A;
+    --field: #F9F6F0;
+    --text: #604939;
+    --muted: #66574D;
+    --accent: #784F26;
+    --link: #3D5D71;
+    --ok: #3D6034;
+    --warn: #7E5220;
+    --danger: #8F3A2D;
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0 20px 96px;
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  header.top { padding: 56px 0 8px; }
+  h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 0 0 12px;
+  }
+  header.top p { max-width: 68ch; margin: 0 0 10px; }
+  .lede { color: var(--muted); font-size: 13.5px; }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+  }
+
+  section.pair {
+    padding: 40px 0 8px;
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+  }
+  section.pair .meta {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin: 0 0 20px;
+    max-width: 72ch;
+  }
+  section.pair .meta a { color: var(--link); }
+  section.pair .meta code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+
+  .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+
+  .screen {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    font-size: 14px;
+  }
+  .screen h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  .note {
+    color: var(--muted);
+    font-size: 12.5px;
+    margin: 8px 0 0;
+  }
+
+  /* shared bits used by more than one demo */
+  .btn {
+    font: inherit;
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 7px 14px;
+    border: 1px solid transparent;
+    cursor: default;
+  }
+  .btn-accent { background: var(--accent); color: var(--field); }
+  .btn-quiet {
+    background: transparent;
+    border-color: var(--line);
+    color: var(--text);
+  }
+  .btn-danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+  .linkish { color: var(--link); font-size: 14px; }
+  .row-gap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .num { font-variant-numeric: tabular-nums; }
+  .mono { font-family: var(--mono); font-size: 12.5px; }
+  .muted { color: var(--muted); }
+  .rule { border: 0; border-top: 1px solid var(--line); margin: 16px 0; }
+  .field {
+    background: var(--field);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--text);
+    width: 100%;
+  }
+
+  /* 1. add with no undo */
+  .ing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ing-row:last-child { border-bottom: 0; }
+  .x { color: var(--muted); font-size: 15px; }
+
+  /* 3. affordance */
+  .set-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+  }
+  .set-flat { background: transparent; }
+  .set-live { background: var(--field); border: 1px solid var(--line); }
+  .chev { color: var(--muted); }
+
+  /* 5. one view many jobs */
+  .block {
+    background: var(--raised);
+    border-radius: 6px;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .viewcard {
+    background: var(--field);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .viewcard b { font-weight: 600; }
+
+  /* 6. short text */
+  .food {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .food:last-child { border-bottom: 0; }
+  .food-name { flex: 1; min-width: 0; }
+  /* The sin, modelled: a fixed name width chosen against Egg, Milk, Rice. */
+  .clip { flex: 0 0 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .food-kcal { flex: 0 0 auto; font-variant-numeric: tabular-nums; }
+
+  /* 7. decoration as hierarchy. The before panel is deliberately off style. */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .statcard {
+    background: #FFFFFF;
+    border: 1px solid #D9D3CB;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .pill {
+    display: inline-block;
+    background: #EFE9E1;
+    color: #8A8178;
+    border-radius: 999px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    margin-bottom: 6px;
+  }
+  .statnum { font-size: 20px; font-weight: 700; color: #C0642A; }
+  .bignum {
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 8. row controls */
+  .hn-title { font-size: 15px; }
+  .hn-meta { font-size: 12.5px; color: var(--muted); }
+  .hn-strong { color: var(--text); font-weight: 500; }
+  .hn-weak { font-size: 11.5px; color: var(--muted); }
+
+  footer.bottom {
+    border-top: 1px solid var(--line);
+    margin-top: 48px;
+    padding-top: 20px;
+    color: var(--muted);
+    font-size: 13.5px;
+    max-width: 72ch;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="top">
+  <h1>UX before and after</h1>
+  <p>Every pair in <code>references/examples/</code>, rendered so there is
+  something to look at. Each one is a screen that went wrong in a plausible
+  way, next to the fix.</p>
+  <p class="lede">This page is for a person. An agent should load the single
+  markdown file for the pair it needs, not this. The words in each file are
+  the guidance, these renders are just the pictures.</p>
+</header>
+
+<!-- 1 -->
+<section class="pair">
+  <h2>Adding a thing with no way to see or remove it</h2>
+  <p class="meta">Principle 7. A screen that adds a thing shows the things and
+  can remove them. <a href="add-with-no-undo.md">add-with-no-undo.md</a></p>
+  <div class="cols">
+    <div>
+      <p class="label">Before</p>
+      <div class="screen">
+        <h3>Add ingredient</h3>
+        <div style="display:grid; gap:8px;">
+          <input class="field" value="" placeholder="Name">
+          <input class="field" value="" placeholder="Amount">
+          <div><button class="btn btn-accent">Save</button></div>
+        </div>
+        <p class="note">Saved. The form cleared. Nothing else on the screen
+        moved, and there is no way to tell what is in the recipe.</p>
+      </div>
+    </div>
+    <div>
+      <p class="label">After</p>
+      <div class="screen">
+        <h3>Add ingredient</h3>
+        <div style="display:grid; gap:8px;">
+          <input class="field" value="" placeholder="Name">
+          <input class="field" value="" placeholder="Amount">
+          <div><button class="btn btn-accent">Save</button></div>
+        </div>
+        <hr class="rule">
+        <div class="ing-row"><span>Butter</span><span class="row-gap"><span class="num muted">50 g</span><span class="x">&times;</span></span></div>
+        <div class="ing-row"><span>Yellow onion</span><span class="row-gap"><span class="num muted">2</span><span class="x">&times;</span></span></div>
+        <div class="ing-row"><span>Arborio rice</span><span class="row-gap"><span class="num muted">300 g</span><span class="x">&times;</span></span></div>
+        <p class="note">The row appearing is the confirmation, so no message is
+        needed. Remove is one click, because re-adding costs one click.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="pair">
+  <h2>A destructive action styled like a safe one</h2>
+  <p class="meta">Principle 7 and principle 4. If two controls can be hit by
+  the same reflex and one is irreversible, the layout is wrong.
+  <a href="dangerous-looks-safe.md">dangerous-looks-safe.md</a></p>
+  <div class="cols">
+    <div>
+      <p class="label">Before</p>
+      <div class="screen">
+        <h3>kalori</h3>
+        <p class="muted" style="font-size:13px; margin:0 0 12px;">Running, commit a3f91c2</p>
+        <div class="row-gap">
+          <button class="btn btn-accent">Redeploy</button>
+          <button class="btn btn-accent">View logs</button>
+          <button class="btn btn-accent">Delete application</button>
+        </div>
+        <p class="note">Three identical buttons. Two are free, one is
+        permanent, and nothing slows the hand down.</p>
+      </div>
+    </div>
+    <div>
+      <p class="label">After</p>
+      <div class="screen">
+        <h3>kalori</h3>
+        <p class="muted" style="font-size:13px; margin:0 0 12px;">Running, commit a3f91c2</p>
+        <div class="row-gap">
+          <button class="btn btn-accent">Redeploy</button>
+          <a class="linkish" href="#">View logs</a>
+        </div>
+        <hr class="rule">
+        <p style="color:var(--danger); font-weight:600; margin:0 0 4px; font-size:14px;">Delete application</p>
+        <p class="muted" style="font-size:12.5px; margin:0 0 8px;">Removes the container, the volumes, and the deploy history. Not recoverable.</p>
+        <input class="field" placeholder="Type kalori to confirm" style="max-width:240px;">
+        <div style="margin-top:8px;"><button class="btn btn-danger" disabled>Delete application</button></div>
+        <p class="note">Distance and a typed name are the guard. The colour is
+        only the label.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="pair">
+  <h2>A flat control that does not read as interactive</h2>
+  <p class="meta">Principle 5. Context carries affordance when the view is one
+  kind of thing. This one is not.
+  <a href="flat-control-no-affordance.md">flat-control-no-affordance.md</a></p>
+  <div class="cols">
+    <div>
+      <p class="label">Before</p>
+      <div class="screen">
+        <h3>Settings</h3>
+        <div class="set-row set-flat"><span>Units</span><span class="muted">metric</span></div>
+        <div class="set-row set-flat"><span>Daily target</span><span class="muted num">2200 kcal</span></div>
+        <div class="set-row set-flat"><span>Version</span><span class="muted mono">1.4.2</span></div>
+        <p class="note">Two of these open an editor. One does nothing. You find
+        out by clicking.</p>
+      </div>
+    </div>
+    <div>
+      <p class="label">After</p>
+      <div class="screen">
+        <h3>Settings</h3>
+        <div class="set-row set-live"><span>Units</span><span class="row-gap"><span class="muted">metric</span><span class="chev">&rsaquo;</span></span></div>
+        <div class="set-row set-live"><span>Daily target</span><span class="row-gap"><span class="muted num">2200 kcal</span><span class="chev">&rsaquo;</span></span></div>
+        <div class="set-row set-flat"><span class="muted">Version</span><span class="muted mono">1.4.2</span></div>
+        <p class="note">The changeable rows sit on the lightest surface and
+        carry a chevron. The fact stays plain and stays quiet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="pair">
+  <h2>A system-initiated change with no trace</h2>
+  <p class="meta">Principle 7. If the system can change state on its own, the
+  screen showing that state shows when it last changed and what caused it.
+  <a href="silent-system-change.md">silent-system-change.md</a></p>
+  <div class="cols">
+    <div>
+      <p class="label">Before</p>
+      <div class="screen">
+        <h3>kalori</h3>
+        <p style="margin:0;"><span style="color:var(--ok); font-weight:600;">Running</span></p>
+        <p class="note">It said this yesterday too. Overnight the poller found
+        a commit and rebuilt the container. The page cannot tell you that.</p>
+      </div>
+    </div>
+    <div>
+      <p class="label">After</p>
+      <div class="screen">
+        <h3>kalori</h3>
+        <p style="margin:0 0 10px;"><span style="color:var(--ok); font-weight:600;">Running</span></p>
+        <div class="ing-row"><span class="muted" style="font-size:13px;">Today 14:02</span><span class="row-gap"><span class="mono">a3f91c2</span><span class="muted" style="font-size:12.5px;">poll</span></span></div>
+        <div class="ing-row"><span class="muted" style="font-size:13px;">Yesterday 09:31</span><span class="row-gap"><span class="mono">7c02b19</span><span class="muted" style="font-size:12.5px;">poll</span></span></div>
+        <div class="ing-row"><span class="muted" style="font-size:13px;">3 days ago 18:44</span><span class="row-gap"><span class="mono">d81ee40</span><span class="muted" style="font-size:12.5px;">j.rivera</span></span></div>
+        <p class="note">Hash in mono, because you compare it against what you
+        pushed. Same treatment whether a person or the poller acted.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="pair">
+  <h2>One view doing three jobs</h2>
+  <p class="meta">Principle 2 and principle 1. Split by goal, not by data type.
+  <a href="one-view-many-jobs.md">one-view-many-jobs.md</a></p>
+  <div class="cols">
+    <div>
+      <p class="label">Before</p>
+      <div class="screen">
+        <h3>Risotto</h3>
+        <div class="block">Photo</div>
+        <div class="block">Intro and story</div>
+        <div class="block">Ingredients</div>
+        <div class="block">Steps</div>
+        <div class="block">Nutrition table</div>
+        <div class="block">Notes</div>
+        <div class="block">Related recipes</div>
+        <div class="block">Edit form</div>
+        <p class="note">Everything about this recipe. Nobody is trying to do
+        that. Three different people scroll past most of it.</p>
+      </div>
+    </div>
+    <div>
+      <p class="label">After</p>
+      <div class="screen">
+        <h3>Risotto</h3>
+        <div class="viewcard"><b>Read</b><div class="muted" style="font-size:12.5px;">Photo, intro, ingredients, steps. Deciding whether to cook it. The default.</div></div>
+        <div class="viewcard"><b>Cook</b><div class="muted" style="font-size:12.5px;">Ingredients and steps, larger type, one step at a time, screen stays awake.</div></div>
+        <div class="viewcard"><b>Shop</b><div class="muted" style="font-size:12.5px;">The list, scaled to servings, each line checkable.</div></div>
+        <p class="note">Edit moves to its own screen. Nothing was deleted and
+        no information design changed, the material got split by goal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="pair">
+  <h2>A screen built for three-character text</h2>
+  <p class="meta">Principle 10. Lay out against the longest real value, not
+  the demo data. <a href="built-for-short-text.md">built-for-short-text.md</a></p>
+  <div class="cols">
+    <div>
+      <p class="label">Before</p>
+      <div class="screen">
+        <h3>Search</h3>
+        <div class="food"><span class="food-name clip">Chicken breast, skinless, boneless, raw, organic</span><span class="food-kcal">114</span></div>
+        <div class="food"><span class="food-name clip">Egg</span><span class="food-kcal">155</span></div>
+        <div class="food"><span class="food-name clip">Cr&egrave;me fra&icirc;che 34% fat, organic, lactose free</span><span class="food-kcal">340</span></div>
+        <div class="food"><span class="food-name clip">Cr&egrave;me fra&icirc;che 15% fat, organic, lactose free</span><span class="food-kcal">165</span></div>
+        <p class="note">The two that matter cut off before the part that tells
+        them apart. Built against Egg, Milk, Rice.</p>
+      </div>
+    </div>
+    <div>
+      <p class="label">After</p>
+      <div class="screen">
+        <h3>Search</h3>
+        <div class="food"><span class="food-name">Chicken breast, skinless, boneless, raw, organic</span><span class="food-kcal">114</span></div>
+        <div class="food"><span class="food-name">Egg</span><span class="food-kcal">155</span></div>
+        <div class="food"><span class="food-name">Cr&egrave;me fra&icirc;che 34% fat, organic, lactose free</span><span class="food-kcal">340</span></div>
+        <div class="food"><span class="food-name">Cr&egrave;me fra&icirc;che 15% fat, organic, lactose free</span><span class="food-kcal">165</span></div>
+        <p class="note">The number column is sized to its widest value and never
+        moves. The name wraps and the row grows.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="pair">
+  <h2>Decoration standing in for hierarchy</h2>
+  <p class="meta">Principle 6 and principle 4. The before panel is deliberately
+  off palette, because the look is the point.
+  <a href="decoration-as-hierarchy.md">decoration-as-hierarchy.md</a></p>
+  <div class="cols">
+    <div>
+      <p class="label">Before</p>
+      <div class="screen" style="background:#F7F5F2;">
+        <h3 style="color:#3A3A3C;">Training</h3>
+        <div class="cards">
+          <div class="statcard"><div class="pill">Streak</div><div class="statnum">12</div></div>
+          <div class="statcard"><div class="pill">Sessions</div><div class="statnum">4</div></div>
+          <div class="statcard"><div class="pill">Volume</div><div class="statnum">8.2t</div></div>
+          <div class="statcard"><div class="pill">Last</div><div class="statnum">2d</div></div>
+        </div>
+        <p class="note" style="color:#8A8178;">Four numbers with identical
+        weight claim all four matter equally. You opened the app for one.</p>
+      </div>
+    </div>
+    <div>
+      <p class="label">After</p>
+      <div class="screen">
+        <h3>Training</h3>
+        <p class="muted" style="margin:0; font-size:13.5px;">Last session 2 days ago</p>
+        <p class="bignum" style="margin:2px 0 2px;">12</p>
+        <p style="margin:0 0 10px; font-size:13.5px;">day streak</p>
+        <p class="muted" style="margin:0; font-size:13.5px;"><span class="num">4</span> sessions this week &middot; <span class="num">8.2t</span> volume</p>
+        <hr class="rule">
+        <p class="note">No boxes, no pills, no shadows. One rule. The three
+        numbers read once a month share one line.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="pair">
+  <h2>Row controls styled by category instead of by use</h2>
+  <p class="meta">Principle 4. Weight follows how often someone wants the
+  thing, never what category of metadata it is.
+  <a href="uniform-row-controls.md">uniform-row-controls.md</a></p>
+  <div class="cols">
+    <div>
+      <p class="label">Before</p>
+      <div class="screen">
+        <div style="margin-bottom:12px;">
+          <div class="hn-title"><a class="linkish" href="#">Writing a toy scheduler in 200 lines</a> <span class="muted" style="font-size:12px;">(example.com)</span></div>
+          <div class="hn-meta"><span class="num">123</span> points by alice 3 hours ago | hide | <span class="num">47</span> comments</div>
+        </div>
+        <div>
+          <div class="hn-title"><a class="linkish" href="#">The case against config files</a> <span class="muted" style="font-size:12px;">(example.org)</span></div>
+          <div class="hn-meta"><span class="num">88</span> points by bob 5 hours ago | hide | <span class="num">31</span> comments</div>
+        </div>
+        <p class="note">Everything on the second line is the same grey. Two of
+        the five items carry the traffic and none of the styling.</p>
+      </div>
+    </div>
+    <div>
+      <p class="label">After</p>
+      <div class="screen">
+        <div style="margin-bottom:12px;">
+          <div class="hn-title"><a class="linkish" href="#">Writing a toy scheduler in 200 lines</a> <span class="muted" style="font-size:12px;">(example.com)</span></div>
+          <div class="hn-meta" style="display:flex; justify-content:space-between; gap:12px;">
+            <span><span class="num">123</span> points by alice 3 hours ago &middot; <a class="hn-strong" style="text-decoration:none;" href="#"><span class="num">47</span> comments</a></span>
+            <span class="hn-weak">hide</span>
+          </div>
+        </div>
+        <div>
+          <div class="hn-title"><a class="linkish" href="#">The case against config files</a> <span class="muted" style="font-size:12px;">(example.org)</span></div>
+          <div class="hn-meta" style="display:flex; justify-content:space-between; gap:12px;">
+            <span><span class="num">88</span> points by bob 5 hours ago &middot; <a class="hn-strong" style="text-decoration:none;" href="#"><span class="num">31</span> comments</a></span>
+            <span class="hn-weak">hide</span>
+          </div>
+        </div>
+        <p class="note">Comments gets the second most weight because it gets
+        the second most clicks. Hide is rare and destructive, so it retreats.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bottom">
+  <p>Adding a pair means writing the markdown file first, then a section here.
+  If the two ever disagree, the markdown is right, because that is what agents
+  read.</p>
+  <p>The reference screen is a separate file,
+  <a href="kalori-restyle.html">kalori-restyle.html</a>. It is a real app
+  restyled, not a before and after.</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,2 @@
+{"type":"session_meta","timestamp":"2026-08-16T10:00:01Z","payload":{"id":"child-thread","parent_thread_id":"root-thread","agent_role":"codex_reviewer","source":{"subagent":{"thread_spawn":true}}}}
+{"type":"event_msg","timestamp":"2026-08-16T10:01:00Z","payload":{"type":"token_count","info":{"total_token_usage":{"input_tokens":60,"output_tokens":9},"last_token_usage":{"input_tokens":20,"output_tokens":2}},"rate_limits":{"primary":{"used_percent":91.0,"window_minutes":10080,"resets_at":1788999999}}}}

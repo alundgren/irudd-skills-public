@@ -1,0 +1,4 @@
+{
+  "two_call_plain_for": "const results = await Promise.all([\n  tools.exec_command({\"cmd\":\"python3 -m unittest\",\"workdir\":\"/repo\"}),\n  tools.exec_command({cmd:\"rg -n TODO resources\",workdir:\"/repo\"})\n]);\nfor (const r of results) text(r.output);",
+  "four_call_destructured_for_each": "let [tests, lint, status, files] = await Promise.all([\n  tools.exec_command({cmd:\"python3 -m unittest\",workdir:\"/repo\"}),\n  tools.exec_command({cmd:\"python3 resources/scripts/validate_skills.py\",workdir:\"/repo\"}),\n  tools.exec_command({cmd:\"git status --short\",workdir:\"/repo\"}),\n  tools.exec_command({cmd:\"rg --files resources/skills\",workdir:\"/repo\"})\n]);\n[tests, lint, status, files].forEach(r => text(r.output));"
+}

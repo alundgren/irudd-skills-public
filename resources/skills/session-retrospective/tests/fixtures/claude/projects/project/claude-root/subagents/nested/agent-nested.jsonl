@@ -1,0 +1,1 @@
+{"type":"assistant","sessionId":"nested-agent","timestamp":"2026-08-16T10:02:00Z","message":{"id":"nested-message","role":"assistant","content":[{"type":"text","text":"Nested work."}],"usage":{"input_tokens":10,"output_tokens":2}}}

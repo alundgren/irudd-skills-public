@@ -1,0 +1,1 @@
+{"type":"assistant","sessionId":"solo","timestamp":"2026-08-16T10:00:00Z","message":{"id":"solo-message","role":"assistant","content":[{"type":"text","text":"A clean solo session."}],"usage":{"input_tokens":11,"output_tokens":4}}}

@@ -1,0 +1,64 @@
+name: Validate skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate SKILL.md files
+        run: python3 resources/scripts/validate_skills.py
+
+      - name: Validate shared review guidance
+        run: python3 resources/scripts/validate_review_guidance.py
+
+      - name: Validate canonical issue planning
+        run: python3 resources/scripts/validate_plan_issues.py
+
+      - name: Validate canonical issue implementation
+        run: python3 resources/scripts/validate_implement_issue.py
+
+      - name: Check symlinks are relative and resolvable
+        run: |
+          set -euo pipefail
+          git ls-files -z -- .claude/skills .agents/skills |
+          while IFS= read -r -d '' link; do
+            [ -L "$link" ] || { echo "Not a symlink: $link"; exit 1; }
+            target=$(readlink "$link")
+            case "$target" in
+              /*) echo "Absolute symlink found (should be relative): $link -> $target"; exit 1 ;;
+            esac
+            [ -e "$link" ] || { echo "Broken symlink: $link -> $target"; exit 1; }
+          done
+          echo "All symlinks relative and resolvable."
+
+      - name: Check every skill has both symlinks
+        run: |
+          set -euo pipefail
+          for skill in resources/skills/*/; do
+            name=$(basename "$skill")
+            for runtime in .claude .agents; do
+              [ -L "$runtime/skills/$name" ] || {
+                echo "Missing symlink: $runtime/skills/$name"; exit 1; }
+            done
+          done
+          echo "Every skill has both runtime symlinks."
+
+      - name: Test the session-retrospective helpers
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          python3 -m unittest discover \
+            -s resources/skills/session-retrospective/tests -p 'test_*.py'

@@ -1,0 +1,1 @@
+{"type":"session_meta","timestamp":"2026-08-16T10:00:02Z","payload":{"id":"nested-thread","parent_thread_id":"child-thread","source":{"subagent":{"thread_spawn":true}}}}

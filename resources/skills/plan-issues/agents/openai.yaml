@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan Issues"
+  short_description: "Plan and publish reviewed GitHub issue trees"
+  default_prompt: "Use $plan-issues to turn this idea or issue into a reviewed GitHub issue plan."
